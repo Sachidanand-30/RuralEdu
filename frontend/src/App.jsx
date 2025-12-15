@@ -5,6 +5,7 @@ import { DashboardPage } from "./pages/dashboard";
 import { CoursesPage } from "./pages/courses";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { HomePage } from "./pages/home";
+import { CourseDetailsPage } from "./pages/course-details";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Route element={<ProtectedRoute />}>
         <Route path="/home" element={<HomePage />} />
         <Route path="/courses" element={<CoursesPage />} />
+        <Route path="/course/:courseId" element={<CourseDetailsPage />} />
       </Route>
 
       <Route element={<ProtectedRoute roles={["student"]} />}>

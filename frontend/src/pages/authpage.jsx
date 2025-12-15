@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { 
-  Mail, 
-  Lock, 
-  User, 
-  GraduationCap, 
-  School, 
+import {
+  Mail,
+  Lock,
+  User,
+  GraduationCap,
+  School,
   ArrowRight,
   BookOpen,
-  Loader2 
+  Loader2
 } from "lucide-react";
 
 export const AuthPage = () => {
@@ -37,7 +37,6 @@ export const AuthPage = () => {
     try {
       if (isLogin) {
         await login({ email: formData.email, password: formData.password, role });
-        alert("Login Successful!");
       } else {
         await register({
           name: formData.fullName,
@@ -46,7 +45,6 @@ export const AuthPage = () => {
           role,
           grade: role === "student" ? formData.grade : undefined,
         });
-        alert("Registration Successful!");
       }
 
       navigate(role === "educator" ? "/dashboard/teacher" : "/dashboard/student");
@@ -61,13 +59,13 @@ export const AuthPage = () => {
 
   return (
     <div className="flex w-full min-h-screen bg-white">
-      
+
       {/* LEFT SIDE: Image */}
       <div className="hidden lg:flex w-1/2 relative bg-indigo-900 text-white flex-col justify-between p-12 overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <img 
-            src="https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=2600&auto=format&fit=crop" 
-            alt="Education Background" 
+          <img
+            src="https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=2600&auto=format&fit=crop"
+            alt="Education Background"
             className="w-full h-full object-cover opacity-20"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-indigo-900/50 to-indigo-900/90" />
@@ -88,7 +86,7 @@ export const AuthPage = () => {
             <span className="text-indigo-300">everywhere.</span>
           </h2>
           <p className="text-indigo-100 text-lg leading-relaxed">
-            Join a community dedicated to bridging the educational gap. 
+            Join a community dedicated to bridging the educational gap.
             Access world-class resources regardless of your location.
           </p>
         </div>
@@ -101,14 +99,14 @@ export const AuthPage = () => {
       {/* RIGHT SIDE: Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-gray-50">
         <div className="w-full max-w-md space-y-8">
-          
+
           <div className="text-center">
             <h1 className="text-3xl font-bold text-gray-900 tracking-tight">
               {isLogin ? "Welcome back" : "Create an account"}
             </h1>
             <p className="mt-2 text-sm text-gray-600">
-              {isLogin 
-                ? "Enter your credentials to access your dashboard" 
+              {isLogin
+                ? "Enter your credentials to access your dashboard"
                 : "Get started with your learning journey today"}
             </p>
           </div>
@@ -118,11 +116,10 @@ export const AuthPage = () => {
             <button
               type="button"
               onClick={() => setRole("student")}
-              className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
-                role === "student"
+              className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${role === "student"
                   ? "bg-white text-indigo-600 shadow-sm ring-1 ring-black/5"
                   : "text-gray-500 hover:text-gray-700"
-              }`}
+                }`}
             >
               <GraduationCap className="w-4 h-4" />
               Student
@@ -130,11 +127,10 @@ export const AuthPage = () => {
             <button
               type="button"
               onClick={() => setRole("educator")}
-              className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${
-                role === "educator"
+              className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${role === "educator"
                   ? "bg-white text-indigo-600 shadow-sm ring-1 ring-black/5"
                   : "text-gray-500 hover:text-gray-700"
-              }`}
+                }`}
             >
               <School className="w-4 h-4" />
               Educator
@@ -172,7 +168,7 @@ export const AuthPage = () => {
                   onChange={handleChange}
                   className="block w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none bg-white text-gray-900"
                 >
-                  {["1st","2nd","3rd","4th","5th","6th","7th","8th","9th","10th","11th","12th"].map((g) => (
+                  {["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th", "11th", "12th"].map((g) => (
                     <option key={g} value={g}>{g} grade</option>
                   ))}
                 </select>
@@ -227,8 +223,8 @@ export const AuthPage = () => {
                 </>
               ) : (
                 <>
-                  {isLogin 
-                    ? `Sign in as ${role === "student" ? "Student" : "Educator"}` 
+                  {isLogin
+                    ? `Sign in as ${role === "student" ? "Student" : "Educator"}`
                     : "Create Account"}
                   <ArrowRight className="w-4 h-4" />
                 </>

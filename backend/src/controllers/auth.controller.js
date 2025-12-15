@@ -7,7 +7,7 @@ const COOKIE_OPTIONS = {
   secure: false,
   sameSite: "lax",
   maxAge: 60 * 60 * 1000,
-  path :"/"
+  path: "/"
 };
 
 const registerUser = async (req, res, role) => {
@@ -47,6 +47,7 @@ const registerUser = async (req, res, role) => {
       .status(201)
       .json({
         message: `${role} registered successfully`,
+        token,
         user: {
           id: user._id,
           name: user.name,
@@ -88,12 +89,13 @@ const loginUser = async (req, res, role) => {
       .cookie("token", token, COOKIE_OPTIONS)
       .json({
         message: `${role} login successful`,
+        token,
         user: {
           id: user._id,
           name: user.name,
           email: user.email,
-        role: user.role,
-        ...(user.grade && { grade: user.grade })
+          role: user.role,
+          ...(user.grade && { grade: user.grade })
         }
       });
 

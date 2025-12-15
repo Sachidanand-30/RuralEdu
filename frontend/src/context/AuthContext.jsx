@@ -11,12 +11,14 @@ export const AuthProvider = ({ children }) => {
   });
   const [loading, setLoading] = useState(false);
 
-  const persistUser = (value) => {
-    setUser(value);
-    if (value) {
-      localStorage.setItem("lms_user", JSON.stringify(value));
+  const persistUser = (user, token) => {
+    setUser(user);
+    if (user && token) {
+      localStorage.setItem("lms_user", JSON.stringify(user));
+      localStorage.setItem("token", token);
     } else {
       localStorage.removeItem("lms_user");
+      localStorage.removeItem("token");
     }
   };
 
@@ -24,7 +26,7 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     try {
       const { data } = await api.post(`/auth/${role}/login`, { email, password });
-      persistUser(data.user);
+      persistUser(data.user, data.token);
       return data.user;
     } finally {
       setLoading(false);
@@ -35,7 +37,7 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     try {
       const { data } = await api.post(`/auth/${role}/register`, { name, email, password, grade });
-      persistUser(data.user);
+      persistUser(data.user, data.token);
       return data.user;
     } finally {
       setLoading(false);
@@ -48,7 +50,7 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       // ignore
     } finally {
-      persistUser(null);
+      persistUser(null, null);
     }
   };
 

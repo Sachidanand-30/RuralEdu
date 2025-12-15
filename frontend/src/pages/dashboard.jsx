@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { api, apiMultipart } from "../lib/api";
 import { useAuth } from "../context/AuthContext";
 import { Navbar } from "../components/Navbar";
 import { getYoutubeEmbedUrl } from "../lib/youtube";
 
-const Loading = () => <p>Loading...</p>;
-const ErrorMsg = ({ message }) => <p className="error">{message}</p>;
+const Loading = () => <div className="flex justify-center p-12"><p className="text-slate-500">Loading...</p></div>;
+const ErrorMsg = ({ message }) => <div className="p-4 bg-red-50 text-red-600 rounded-lg">{message}</div>;
 
 const StudentDashboard = () => {
   const [data, setData] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [expanded, setExpanded] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,78 +32,48 @@ const StudentDashboard = () => {
   if (error) return <ErrorMsg message={error} />;
 
   return (
-    <div className="page">
-      <div className="section">
-        <div className="section-header">
-          <h2>My Courses</h2>
-          <span className="chip">{data.myCourses?.length || 0} enrolled</span>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="mb-12">
+        <div className="flex items-baseline justify-between gap-4 mb-6">
+          <h2 className="text-2xl font-bold text-slate-900">My Courses</h2>
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700">
+            {data.myCourses?.length || 0} enrolled
+          </span>
         </div>
-        <div className="grid">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {data.myCourses?.map((course) => (
-            <div key={course._id} className="card">
-              <h3>{course.title}</h3>
-              <p className="muted">{course.description || "No description"}</p>
-              <p className="muted">Educator: {course.educator?.name || "N/A"}</p>
+            <div key={course._id} className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+              <h3 className="text-lg font-bold text-slate-900 mb-2">{course.title}</h3>
+              <p className="text-slate-500 text-sm mb-4">{course.description || "No description"}</p>
+              <p className="text-slate-500 text-sm mb-4">Educator: {course.educator?.name || "N/A"}</p>
               {course.lessons?.length > 0 && (
-                <div style={{ marginTop: "12px" }}>
+                <div className="mt-3">
                   <button
-                    className="btn-secondary"
-                    onClick={() =>
-                      setExpanded((prev) => ({ ...prev, [course._id]: !prev[course._id] }))
-                    }
+                    className="inline-flex justify-center items-center px-3 py-1.5 bg-white text-slate-700 text-sm font-medium rounded-lg border border-slate-300 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+                    onClick={() => navigate(`/course/${course._id}`)}
                   >
-                    {expanded[course._id] ? "Hide lessons" : "View lessons"}
+                    View lessons
                   </button>
-                  {expanded[course._id] && (
-                    <div className="lesson-grid">
-                      {course.lessons.map((lesson) => {
-                        const embedUrl = getYoutubeEmbedUrl(lesson.youtubeUrl);
-                        return (
-                          <div key={lesson._id} className="lesson-card-wide">
-                            <div className="lesson-header">
-                              <h4 className="lesson-title">{lesson.title}</h4>
-                            </div>
-                            {embedUrl ? (
-                              <div className="video-wrapper video-compact">
-                                <iframe
-                                  src={embedUrl}
-                                  title={lesson.title}
-                                  frameBorder="0"
-                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                  allowFullScreen
-                                />
-                              </div>
-                            ) : (
-                              <p className="error">Invalid YouTube URL</p>
-                            )}
-                            <div className="lesson-actions">
-                              <a className="btn-secondary" href={lesson.youtubeUrl} target="_blank" rel="noreferrer">
-                                Open in YouTube
-                              </a>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
                 </div>
               )}
             </div>
           ))}
-          {data.myCourses?.length === 0 && <p>No enrollments yet.</p>}
+          {data.myCourses?.length === 0 && <p className="text-slate-500">No enrollments yet.</p>}
         </div>
       </div>
 
-      <div className="section">
-        <div className="section-header">
-          <h2>Available Educators</h2>
-          <span className="chip">{data.educators?.length || 0} educators</span>
+      <div className="mb-12">
+        <div className="flex items-baseline justify-between gap-4 mb-6">
+          <h2 className="text-2xl font-bold text-slate-900">Available Educators</h2>
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700">
+            {data.educators?.length || 0} educators
+          </span>
         </div>
-        <div className="grid">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {data.educators?.map((ed) => (
-            <div key={ed._id} className="card">
-              <h3>{ed.name}</h3>
-              <p className="muted">{ed.email}</p>
+            <div key={ed._id} className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+              <h3 className="text-lg font-bold text-slate-900 mb-2">{ed.name}</h3>
+              <p className="text-slate-500 text-sm mb-4">{ed.email}</p>
             </div>
           ))}
         </div>
@@ -179,78 +150,89 @@ const EducatorDashboard = () => {
     }
   };
 
+  const InputClass = "block w-full rounded-lg border-slate-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2.5 border border-slate-300";
+  const ButtonClass = "inline-flex justify-center items-center px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors border-none cursor-pointer";
+
   if (loading) return <Loading />;
   if (error) return <ErrorMsg message={error} />;
 
   return (
-    <div className="page">
-      <div className="section">
-        <div className="section-header">
-          <h2>At a Glance</h2>
-          <span className="chip">{data.totalCourses} courses</span>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="mb-12">
+        <div className="flex items-baseline justify-between gap-4 mb-6">
+          <h2 className="text-2xl font-bold text-slate-900">At a Glance</h2>
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700">
+            {data.totalCourses} courses
+          </span>
         </div>
-        <div className="grid">
-          <div className="card">
-            <h3>Total Courses</h3>
-            <p className="stat">{data.totalCourses}</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+            <h3 className="text-lg font-bold text-slate-900 mb-2">Total Courses</h3>
+            <p className="text-4xl font-bold text-slate-900">{data.totalCourses}</p>
           </div>
         </div>
       </div>
 
-      <div className="section">
-        <div className="section-header">
-          <h2>Create Course</h2>
+      <div className="mb-12">
+        <div className="flex items-baseline justify-between gap-4 mb-6">
+          <h2 className="text-2xl font-bold text-slate-900">Create Course</h2>
         </div>
-        <form className="form" onSubmit={handleCourseCreate}>
+        <form className="flex flex-col gap-4 max-w-md bg-white p-6 rounded-xl border border-slate-200 shadow-sm" onSubmit={handleCourseCreate}>
           <input
             required
             placeholder="Course title"
+            className={InputClass}
             value={form.title}
             onChange={(e) => setForm({ ...form, title: e.target.value })}
           />
           <textarea
             placeholder="Description"
+            className={InputClass}
             value={form.description}
             onChange={(e) => setForm({ ...form, description: e.target.value })}
           />
           <select
             required
+            className={InputClass}
             value={form.grade}
             onChange={(e) => setForm({ ...form, grade: e.target.value })}
           >
-            {["1st","2nd","3rd","4th","5th","6th","7th","8th","9th","10th","11th","12th"].map((g) => (
+            {["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th", "11th", "12th"].map((g) => (
               <option key={g} value={g}>{g} grade</option>
             ))}
           </select>
-          <button type="submit" className="btn">Create</button>
+          <button type="submit" className={ButtonClass}>Create</button>
         </form>
       </div>
 
-      <div className="section">
-        <div className="section-header">
-          <h2>My Courses</h2>
-          <span className="chip">{data.courses?.length || 0} active</span>
+      <div className="mb-12">
+        <div className="flex items-baseline justify-between gap-4 mb-6">
+          <h2 className="text-2xl font-bold text-slate-900">My Courses</h2>
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700">
+            {data.courses?.length || 0} active
+          </span>
         </div>
-        <div className="grid">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {data.courses?.map((course) => (
-            <div key={course._id} className="card">
-              <h3>{course.title}</h3>
-              <p className="muted">{course.description || "No description"}</p>
-              <p className="muted">Grade: {course.grade}</p>
-              <p className="muted">Students: {course.studentsEnrolled}</p>
+            <div key={course._id} className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
+              <h3 className="text-lg font-bold text-slate-900 mb-2">{course.title}</h3>
+              <p className="text-slate-500 text-sm mb-4">{course.description || "No description"}</p>
+              <p className="text-slate-500 text-sm mb-4">Grade: {course.grade}</p>
+              <p className="text-slate-500 text-sm mb-4">Students: {course.studentsEnrolled}</p>
             </div>
           ))}
-          {data.courses?.length === 0 && <p>No courses yet.</p>}
+          {data.courses?.length === 0 && <p className="text-slate-500">No courses yet.</p>}
         </div>
       </div>
 
-      <div className="section">
-        <div className="section-header">
-          <h2>Add Lesson</h2>
+      <div className="mb-12">
+        <div className="flex items-baseline justify-between gap-4 mb-6">
+          <h2 className="text-2xl font-bold text-slate-900">Add Lesson</h2>
         </div>
-        <form className="form" onSubmit={handleLessonAdd}>
+        <form className="flex flex-col gap-4 max-w-md bg-white p-6 rounded-xl border border-slate-200 shadow-sm" onSubmit={handleLessonAdd}>
           <select
             required
+            className={InputClass}
             value={lessonForm.courseId}
             onChange={(e) => setLessonForm({ ...lessonForm, courseId: e.target.value })}
           >
@@ -262,26 +244,29 @@ const EducatorDashboard = () => {
           <input
             required
             placeholder="Lesson title"
+            className={InputClass}
             value={lessonForm.title}
             onChange={(e) => setLessonForm({ ...lessonForm, title: e.target.value })}
           />
           <input
             required
             placeholder="YouTube URL"
+            className={InputClass}
             value={lessonForm.youtubeUrl}
             onChange={(e) => setLessonForm({ ...lessonForm, youtubeUrl: e.target.value })}
           />
-          <button type="submit" className="btn">Add lesson</button>
+          <button type="submit" className={ButtonClass}>Add lesson</button>
         </form>
       </div>
 
-      <div className="section">
-        <div className="section-header">
-          <h2>Upload Assignment (PDF)</h2>
+      <div className="mb-12">
+        <div className="flex items-baseline justify-between gap-4 mb-6">
+          <h2 className="text-2xl font-bold text-slate-900">Upload Assignment (PDF)</h2>
         </div>
-        <form className="form" onSubmit={handleAssignmentAdd}>
+        <form className="flex flex-col gap-4 max-w-md bg-white p-6 rounded-xl border border-slate-200 shadow-sm" onSubmit={handleAssignmentAdd}>
           <select
             required
+            className={InputClass}
             value={assignmentForm.courseId}
             onChange={(e) => setAssignmentForm({ ...assignmentForm, courseId: e.target.value })}
           >
@@ -293,20 +278,23 @@ const EducatorDashboard = () => {
           <input
             required
             placeholder="Assignment title"
+            className={InputClass}
             value={assignmentForm.title}
             onChange={(e) => setAssignmentForm({ ...assignmentForm, title: e.target.value })}
           />
           <textarea
             placeholder="Instructions"
+            className={InputClass}
             value={assignmentForm.instructions}
             onChange={(e) => setAssignmentForm({ ...assignmentForm, instructions: e.target.value })}
           />
           <input
             type="file"
             accept="application/pdf"
+            className={InputClass}
             onChange={(e) => setAssignmentForm({ ...assignmentForm, pdf: e.target.files?.[0] || null })}
           />
-          <button type="submit" className="btn">Upload</button>
+          <button type="submit" className={ButtonClass}>Upload</button>
         </form>
       </div>
     </div>
@@ -315,9 +303,7 @@ const EducatorDashboard = () => {
 
 export const DashboardPage = () => {
   const { user } = useAuth();
-
   if (!user) return null;
-
   return (
     <>
       <Navbar />

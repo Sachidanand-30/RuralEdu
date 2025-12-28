@@ -4,6 +4,8 @@ import { api } from "../lib/api";
 import { Navbar } from "../components/Navbar";
 import { getYoutubeEmbedUrl } from "../lib/youtube";
 import { ArrowLeft, BookOpen, User, PlayCircle, Loader2, Clock, Calendar } from "lucide-react";
+import { DoubtSolver } from "../components/DoubtSolver";
+
 
 export const CourseDetailsPage = () => {
     const { courseId } = useParams();
@@ -192,13 +194,16 @@ export const CourseDetailsPage = () => {
                             <p className="text-sm text-indigo-700 mb-4">
                                 Contact your educator if you have questions about the course material.
                             </p>
-                            <a
-                                href={`mailto:${course.educator?.email}`}
+                            <button
+                                onClick={() => alert(`Educator Name: ${course.educator?.name || "Unknown"}\nEmail: ${course.educator?.email || "No email available"}`)}
                                 className="block w-full text-center py-2 px-4 bg-white text-indigo-600 rounded-lg border border-indigo-200 text-sm font-medium hover:bg-indigo-50 transition-colors"
                             >
                                 Contact Educator
-                            </a>
+                            </button>
                         </div>
+
+                        <DoubtSolver />
+
                     </div>
 
                 </div>

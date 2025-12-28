@@ -92,7 +92,7 @@ export const AuthPage = () => {
         </div>
 
         <div className="relative z-10 text-sm text-indigo-300">
-          © 2024 RuralEdu LMS. All rights reserved.
+          © 2025 RuralEdu LMS. All rights reserved.
         </div>
       </div>
 
@@ -117,8 +117,8 @@ export const AuthPage = () => {
               type="button"
               onClick={() => setRole("student")}
               className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${role === "student"
-                  ? "bg-white text-indigo-600 shadow-sm ring-1 ring-black/5"
-                  : "text-gray-500 hover:text-gray-700"
+                ? "bg-white text-indigo-600 shadow-sm ring-1 ring-black/5"
+                : "text-gray-500 hover:text-gray-700"
                 }`}
             >
               <GraduationCap className="w-4 h-4" />
@@ -128,8 +128,8 @@ export const AuthPage = () => {
               type="button"
               onClick={() => setRole("educator")}
               className={`flex-1 flex items-center justify-center gap-2 py-2.5 text-sm font-medium rounded-lg transition-all duration-200 ${role === "educator"
-                  ? "bg-white text-indigo-600 shadow-sm ring-1 ring-black/5"
-                  : "text-gray-500 hover:text-gray-700"
+                ? "bg-white text-indigo-600 shadow-sm ring-1 ring-black/5"
+                : "text-gray-500 hover:text-gray-700"
                 }`}
             >
               <School className="w-4 h-4" />

@@ -8,6 +8,8 @@ import authRoutes from "./routes/auth.routes.js";
 import courseRoutes from "./routes/course.routes.js";
 import enrollmentRoutes from "./routes/enrollment.routes.js";
 import dashboardRoutes from "./routes/dashboard.routes.js";
+import aiRoutes from "./routes/ai.routes.js";
+
 import { errorHandler } from "./middlewares/error.middleware.js";
 
 const app = express();
@@ -20,7 +22,7 @@ app.use(cookieParser());
 app.use(cors({
   origin: true,
   credentials: true,
-  methods : ["GET","POST","PUT"]
+  methods: ["GET", "POST", "PUT"]
 }));
 /* ---------------------- STATIC FILES ---------------------- */
 // Enable access to uploaded assignment PDFs
@@ -39,6 +41,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/enrollments", enrollmentRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/ai", aiRoutes);
+
 
 /* ---------------------- ERROR HANDLER ---------------------- */
 app.use(errorHandler);
